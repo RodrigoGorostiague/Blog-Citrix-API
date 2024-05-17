@@ -39,7 +39,15 @@ export class CreateReplysDto {
     type: Date,
   })
   updateAt: Date;
+  @ApiProperty({
+    description: 'Post al que se responde',
+    type: Posting,
+  })
   post: Posting;
+  @ApiProperty({
+    description: 'Usuario que responde',
+    type: Users,
+  })
   user: Users;
 }
 

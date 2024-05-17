@@ -11,7 +11,6 @@ import {
   Put,
 } from '@nestjs/common';
 import { PostsService } from '../services/posts.service';
-import { Posting } from '../entities/posts.entity';
 import { CreatePostDto, UpdatePostDto } from '../dtos/posts.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
@@ -30,14 +29,14 @@ export class PostsController {
    */
   @ApiOperation({ summary: 'List of all posts' })
   @HttpCode(HttpStatus.OK)
-  getAll(): Posting[] {
+  getAll() {
     return this.postsService.findAll();
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get one post' })
   @HttpCode(HttpStatus.OK)
-  getOne(@Param('id', ParseIntPipe) id: number): Posting {
+  getOne(@Param('id', ParseIntPipe) id: number) {
     return this.postsService.findOne(id);
   }
   @Post()

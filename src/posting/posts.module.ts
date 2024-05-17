@@ -7,6 +7,11 @@ import { PostsService } from './services/posts.service';
 import { ReplysService } from './services/replys.service';
 import { TagsService } from './services/tags.service';
 import { TagsController } from './controllers/tags.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Posting } from './entities/posts.entity';
+import { Tags } from './entities/tags.entity';
+import { Categories } from './entities/categories.entity';
+import { Replys } from './entities/replys.entity';
 
 @Module({
   controllers: [
@@ -17,5 +22,6 @@ import { TagsController } from './controllers/tags.controller';
   ],
   providers: [CategoriesService, PostsService, ReplysService, TagsService],
   exports: [PostsService],
+  imports: [TypeOrmModule.forFeature([Posting, Categories, Tags, Replys])],
 })
 export class PostsModule {}

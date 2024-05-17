@@ -1,38 +1,33 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Posting } from '../entities/posts.entity';
 import { CreatePostDto, UpdatePostDto } from '../dtos/posts.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+/**
+ * Los servicios dentro de NestJs son clases que se encargan de
+ * la lógica de negocio de nuestra aplicación.
+ * Al utilizar TypeORM, utilizamos el patron de diseño Repository ( TypeORM tambien cuenta con el patron Active Record )
+ * El patron de diseño Repository se encarga de
+ * encapsular la lógica de acceso a datos de nuestra aplicación en una sola clase.
+ * En este caso, los servicios se encargan de interactuar con los repositorios de TypeORM.
+ * Se elige este patron de diseño para poder separar la lógica de negocio de la lógica
+ * de acceso a datos y tambien porque NestJS utiliza este patron de diseño y asi lo recomienda a
+ * la hora de utilizar TypeORM.
+ */
 
 @Injectable()
 export class PostsService {
-  private posts: Posting[] = [
-    {
-      id: 1,
-      createAt: new Date(),
-      title: 'First Post',
-      content: 'This is the first post',
-      img: 'https://source.unsplash.com/random',
-      user: null,
-      tags: [],
-      categories: [],
-    },
-    {
-      id: 2,
-      createAt: new Date(),
-      title: 'Second Post',
-      content: 'This is the second post',
-      img: 'https://source.unsplash.com/random',
-      user: null,
-      tags: [],
-      categories: [],
-    },
-  ];
+  constructor(
+    @InjectRepository(Posting) private postRepository: Repository<Posting>,
+  ) {}
 
-  findAll(): Posting[] {
-    return this.posts;
+  findAll() {
+    return this.postRepository.find();
   }
 
-  findOne(id: number) {
-    const post = this.posts.find((post) => post.id === id);
+  async findOne(id: number) {
+    const post = await this.postRepository.findOneBy({ id });
     if (!post) {
       throw new NotFoundException('Post not found');
     } else {
@@ -41,35 +36,26 @@ export class PostsService {
   }
 
   create(payload: CreatePostDto) {
-    const newPost = {
-      id: this.posts.length + 1,
-      ...payload,
-    };
-    this.posts.push(newPost);
-    return newPost;
+    const newPost = this.postRepository.create(payload);
+    return this.postRepository.save(newPost);
   }
 
-  update(id: number, payload: UpdatePostDto) {
-    const post = this.findOne(id);
+  async update(id: number, payload: UpdatePostDto) {
+    const post = await this.postRepository.findOneBy({ id });
     if (!post) {
-      return null;
+      throw new NotFoundException('Post not found');
     } else {
-      const index = this.posts.indexOf(post);
-      this.posts[index] = {
-        ...post,
-        ...payload,
-      };
-      return this.posts[index];
+      this.postRepository.merge(post, payload);
+      return this.postRepository.save(post);
     }
   }
 
-  remove(id: number) {
-    const index = this.posts.findIndex((post) => post.id === id);
-    if (index === -1) {
+  async remove(id: number) {
+    const post = await this.postRepository.findOneBy({ id });
+    if (!post) {
       throw new NotFoundException('Post not found');
     } else {
-      this.posts.splice(index, 1);
-      return true;
+      return this.postRepository.delete(post.id);
     }
   }
 }
