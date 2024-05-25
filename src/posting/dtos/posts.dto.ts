@@ -1,9 +1,10 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { IsDate, IsNotEmpty, IsString, IsUrl } from 'class-validator';
-import { Users } from 'src/users/entities/users.entity';
+
 import { Categories } from '../entities/categories.entity';
 import { Tags } from '../entities/tags.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { Users } from '../../users/entities/users.entity';
 
 /**
  * Para modificar la documentacion que autogenera Swagger en la API debemos modificar los DTOs

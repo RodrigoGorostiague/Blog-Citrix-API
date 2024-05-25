@@ -1,7 +1,7 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { IsDate, IsNotEmpty, IsString, IsUrl } from 'class-validator';
 import { Posting } from '../entities/posts.entity';
-import { Users } from 'src/users/entities/users.entity';
+import { Users } from '../../users/entities/users.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateReplysDto {

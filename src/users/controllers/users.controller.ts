@@ -33,7 +33,7 @@ export class UsersController {
   @Get(':id/posts')
   @HttpCode(HttpStatus.OK)
   getPosts(@Param('id', ParseIntPipe) id: number) {
-    return this.userService.getPostsByUser(id);
+    return id;
   }
 
   @Post()

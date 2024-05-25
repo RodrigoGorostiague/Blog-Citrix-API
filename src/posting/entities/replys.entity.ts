@@ -1,9 +1,10 @@
-import { Users } from 'src/users/entities/users.entity';
+import { Users } from '../..//users/entities/users.entity';
 import { Posting } from './posts.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -28,7 +29,9 @@ export class Replys {
   @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updateAt: Date;
 
+  @ManyToOne(() => Posting)
   post: Posting;
 
+  @ManyToOne(() => Users)
   user: Users;
 }

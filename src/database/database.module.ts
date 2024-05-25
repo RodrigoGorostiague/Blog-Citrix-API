@@ -1,8 +1,11 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Client } from 'pg';
-import config from 'src/config';
+import config from '../config';
+//import { Posting } from '../posting/entities/posts.entity';
+//import { Categories } from '../posting/entities/categories.entity';
+//import { Tags } from '../posting/entities/tags.entity';
+//import { Replys } from '../posting/entities/replys.entity';
 /**
  * Database module (Global)
  * Permitte que el scope de este modulo sea de alcance global, es decir,
@@ -46,30 +49,11 @@ import config from 'src/config';
            * La propiedad synchronize: true, permite que TypeORM sincronice las entidades
            * con la base de datos en cada inicio de la aplicacion, lo cual puede ser peligroso!!!!
            */
-          synchronize: true,
+          synchronize: false,
         };
       },
     }),
   ],
-  providers: [
-    {
-      provide: 'PG_CLIENT',
-      useFactory: (configService: ConfigType<typeof config>) => {
-        const { user, host, password, dbname, port } = configService.postgres;
-        const client = new Client({
-          user,
-          host,
-          password,
-          database: dbname,
-          port,
-        });
-
-        client.connect();
-        return client;
-      },
-      inject: [config.KEY],
-    },
-  ],
-  exports: ['PG_CLIENT', TypeOrmModule],
+  exports: [TypeOrmModule],
 })
 export class DatabaseModule {}

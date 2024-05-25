@@ -14,6 +14,7 @@ import { Categories } from './entities/categories.entity';
 import { Replys } from './entities/replys.entity';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([Posting, Categories, Tags, Replys])],
   controllers: [
     CategoriesController,
     PostsController,
@@ -22,6 +23,5 @@ import { Replys } from './entities/replys.entity';
   ],
   providers: [CategoriesService, PostsService, ReplysService, TagsService],
   exports: [PostsService],
-  imports: [TypeOrmModule.forFeature([Posting, Categories, Tags, Replys])],
 })
 export class PostsModule {}

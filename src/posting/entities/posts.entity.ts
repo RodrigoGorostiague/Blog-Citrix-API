@@ -1,10 +1,13 @@
-import { Users } from 'src/users/entities/users.entity';
+import { Users } from '../../users/entities/users.entity';
 import { Categories } from './categories.entity';
 import { Tags } from './tags.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -33,7 +36,7 @@ export class Posting {
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createAt: Date;
 
-  @Column({ type: 'varchar', length: 100 })
+  @Column({ type: 'varchar', length: 50 })
   title: string;
 
   @Column({ type: 'text' })
@@ -42,9 +45,14 @@ export class Posting {
   @Column({ type: 'varchar', length: 100 })
   img: string;
 
+  @ManyToMany(() => Categories)
+  @JoinTable()
   categories: Categories[];
 
+  @ManyToOne(() => Users)
   user: Users;
 
+  @ManyToMany(() => Tags)
+  @JoinTable()
   tags: Tags[];
 }

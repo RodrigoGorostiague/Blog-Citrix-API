@@ -2,28 +2,18 @@ import * as Joi from 'joi';
 
 import { Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
-import { PostsModule } from './posting/posts.module';
 import { AppController } from './app.controller';
-import { PostsController } from './posting/controllers/posts.controller';
-import { ReplysController } from './posting/controllers/replys.controller';
-import { UsersController } from './users/controllers/users.controller';
-import { CategoriesController } from './posting/controllers/categories.controller';
 import { AppService } from './app.service';
-import { PostsService } from './posting/services/posts.service';
-import { CategoriesService } from './posting/services/categories.service';
-import { UsersService } from './users/services/users.service';
-import { ReplysService } from './posting/services/replys.service';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import config from './config';
+import { enviroments } from './enviroments';
+import { PostsModule } from './posting/posts.module';
 
 @Module({
   imports: [
-    UsersModule,
-    PostsModule,
-    DatabaseModule,
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      envFilePath: enviroments[process.env.NODE_ENV] || '.env',
       load: [config],
       isGlobal: true,
       validationSchema: Joi.object({
@@ -35,20 +25,11 @@ import config from './config';
         DATABASE_NAME: Joi.string().required(),
       }),
     }),
+    UsersModule,
+    PostsModule,
+    DatabaseModule,
   ],
-  controllers: [
-    AppController,
-    PostsController,
-    ReplysController,
-    UsersController,
-    CategoriesController,
-  ],
-  providers: [
-    AppService,
-    PostsService,
-    CategoriesService,
-    UsersService,
-    ReplysService,
-  ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
